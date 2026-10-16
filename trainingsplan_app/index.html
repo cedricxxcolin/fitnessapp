@@ -150,10 +150,20 @@
   .sub-kopf-zeile { display: flex; justify-content: flex-end; padding: 0 0 2px; }
   .sub-kopf-label { font-size: 10.5px; color: #888; text-transform: uppercase; letter-spacing: .04em; }
   .sub-warnung { font-size: 10.5px; color: #a4342a; text-align: right; max-width: 160px; }
+  .sub-stepper button:disabled { opacity: .35; cursor: default; }
+  .kat-akk-kopf .info-btn { flex: none; }
+  .kat-reset { flex: none; width: 22px; height: 22px; padding: 0; border: 0; background: transparent; color: #0F8F84; font-size: 16px; font-weight: 700; cursor: pointer; line-height: 1; }
+  .kat-gesperrt { color: #aab3ae; font-size: 13px; min-width: 52px; text-align: center; }
+  .kat-akk.gesperrt .kat-akk-name { color: #9aa3a0; font-weight: 500; }
+  .sub-zeile.gesperrt .sub-name { color: #8a948f; }
+  .sub-sperrhinweis { display: block; font-size: 10px; color: #8a948f; line-height: 1.2; }
 
   /* ---- Lateinische Namen global umschaltbar (Punkt F; Position seit Punkt 3
      letzter Durchgang: im Akkordeon-Abschnitt "Muskelgruppen", nicht mehr oben) ---- */
-  #lat-namen-zeile { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #444;
+  #lat-namen-zeile { display: none !important; }
+  .pop-schalter { display: flex; align-items: center; gap: 8px; margin-top: 8px; padding-top: 8px; border-top: 1px solid #e6ece8; font-size: 13px; }
+  .pop-schalter input { width: 18px; height: 18px; accent-color: #0F8F84; margin: 0; }
+  #lat-namen-zeile-alt { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: #444;
                       margin: 4px 0 10px; }
   #lat-namen-zeile input { margin: 0; }
 
@@ -338,8 +348,19 @@
   .plan-drag-handle:hover { color: #2a9d8f; }
   .plan-meta { font-size: 11.5px; color: #5E6966; }
   #uebung-suche-wrap { margin: 0 0 6px; }
-  #uebung-suche-wrap > summary { list-style: none; font-size: 13px; font-weight: 600; color: #d64933; cursor: pointer; padding: 6px 0; min-height: 32px; box-sizing: border-box; }
-  #uebung-suche-wrap > summary::-webkit-details-marker { display: none; }
+  #uebung-suche-wrap > .such-summary { list-style: none; font-size: 13px; font-weight: 600; color: #d64933; cursor: pointer; padding: 6px 0; min-height: 32px; box-sizing: border-box; }
+    @media screen {
+    /* Offene Suche = Vollbild-Fenster über der ganzen App, passt sich der Tastatur an (--vv-h/--vv-top per visualViewport). */
+    #uebung-suche-wrap[open] { position: fixed; left: 0; right: 0; top: var(--vv-top, 0px); height: var(--vv-h, 100vh); z-index: 350; background: #fff;
+      margin: 0; padding: 6px 10px; box-sizing: border-box; display: grid; grid-template-columns: minmax(0,1fr) auto; grid-template-rows: auto auto auto minmax(0,1fr) auto; column-gap: 8px; }
+    #uebung-suche-wrap[open] > * { grid-column: 1 / -1; }
+    #uebung-suche-wrap[open] > input#uebung-suche { grid-column: 1; grid-row: 1; margin: 0; }
+    #uebung-suche-wrap[open] > .such-summary { grid-column: 2; grid-row: 1; padding: 0 4px; min-height: 0; align-self: center; color: #4a554f; }
+    #uebung-suche-wrap[open] > #ueb-filter-schalter { grid-row: 2; min-height: 28px; margin: 2px 0 0; }
+    #uebung-suche-wrap[open] > #ueb-sammel { grid-row: 3; margin-top: 4px; position: static; }
+    #uebung-suche-wrap[open] > #uebung-ergebnisse { grid-row: 4; max-height: none; min-height: 0; overflow-y: auto; margin-top: 4px; -webkit-overflow-scrolling: touch; }
+    #uebung-suche-wrap[open] > #ueb-aktiv { grid-row: 5; }
+  }
   .plan-muskeln { font-size: 11.5px; line-height: 1.3; color: #333; display: -webkit-box; -webkit-line-clamp: 2;
                   -webkit-box-orient: vertical; overflow: hidden; }
   .plan-muskeln .mk-s { color: #5E6966; }
@@ -402,6 +423,11 @@
     body.prim-aus.sek-aus .plan-eintrag .plan-kats { display: none; }
     #trainingsplan-titel, .plan-abschnitt-titel { display: none !important; }
     #feedback:empty { display: none; }
+    .ueb-treffer-zeile .ueb-treffer-tags, .ueb-treffer-zeile .ueb-treffer-zeile-label:has(+ .ueb-treffer-tags) { display: none; }
+    body.tags-an .ueb-treffer-zeile .ueb-treffer-tags { display: flex; }
+    body.tags-an .ueb-treffer-zeile .ueb-treffer-zeile-label:has(+ .ueb-treffer-tags) { display: block; }
+    body.prim-aus .ueb-treffer-zeile .treffer-sub-badge.prim, body.sek-aus .ueb-treffer-zeile .treffer-sub-badge.sek { display: none; }
+    body.prim-aus.sek-aus .ueb-treffer-zeile .ueb-treffer-kats, body.prim-aus.sek-aus .ueb-treffer-zeile .ueb-treffer-zeile-label:has(+ .ueb-treffer-kats) { display: none; }
     .plan-eintrag .ueb-treffer-tags { display: none; }
     body.tags-an .plan-eintrag .ueb-treffer-tags { display: flex; }
     .sidebar-box { padding: 10px 12px; margin-bottom: 10px; }
@@ -410,6 +436,19 @@
     .plan-eintrag-zeile { flex-direction: column; align-items: stretch; } .plan-alt-details { flex: 0 0 auto; }
     .plan-alt-liste { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
     .plan-eintrag .plan-eintrag-titel { font-size: 13.5px; }
+    /* Auswahl-Spalte: schmale Zeilen mit Zähler */
+    .kat-akk-kopf { padding: 3px 6px 3px 8px; gap: 4px; min-height: 30px; box-sizing: border-box; }
+    .kat-akk-name { font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+    .kat-akk-kopf .info-btn { width: 14px; height: 14px; font-size: 9px; }
+    .kat-akk-kopf .sub-stepper, .sub-zeile .sub-stepper { gap: 3px; }
+    .kat-akk-kopf .sub-stepper button, .sub-zeile .sub-stepper button { width: 22px; height: 22px; font-size: 14px; }
+    .kat-akk-kopf .sub-stepper b, .sub-zeile .sub-stepper b { min-width: 12px; font-size: 12.5px; }
+    .kat-reset { width: 18px; height: 22px; font-size: 15px; }
+    .kat-gesperrt { min-width: 52px; font-size: 12px; }
+    .kat-akk-chevron { font-size: 9px; width: 9px; }
+    .kat-akk-body { padding: 0 6px 4px 12px; }
+    .sub-zeile { padding: 2px 0; font-size: 11.5px; gap: 4px; }
+    .sub-sperrhinweis { font-size: 9.5px; }
     /* kompakte Plankarten: weniger Leerraum, kleinere Schrift, Pills in einer Reihe */
     .plan-eintrag { margin-bottom: 4px; padding: 3px 6px 3px 4px; gap: 6px; align-items: center; }
     .plan-eintrag .plan-eintrag-titel { font-size: 12px; line-height: 1.2; }
@@ -424,7 +463,7 @@
     .plan-eintrag .plan-drag-handle { font-size: 13px; }
     #main h2 { font-size: 16px; margin: 6px 0; }
     #main .ansicht-umschalter { padding-top: 6px; }
-    body:not([data-mmzustand="klein"]):not([data-mmzustand="gross"]):not(.mm-frei) #main { padding-right: calc(clamp(236px, 25vw, 400px) + 12px) !important; }
+    body:not([data-mmzustand="klein"]):not([data-mmzustand="gross"]):not(.mm-frei) #main { padding-right: calc(clamp(140px, calc((100vh - 70px) * 0.5), 360px) + 12px) !important; }
     body[data-mmzustand="klein"] #main { padding-bottom: 70px !important; }
     body.plan-zu #main { padding-right: 0 !important; }
     body.sb-zu #sidebar { width: 44px !important; padding: 0 !important; overflow: hidden; }
@@ -438,7 +477,7 @@
     body.sb-zu #sb-kopf span:first-child, body.plan-zu #plan-kopf span:first-child { writing-mode: vertical-rl; }
 
     #muskelmensch, body[data-mobiltab] #muskelmensch { position: fixed !important; right: 12px; bottom: 58px; left: auto; top: auto;
-        order: 0; z-index: 150; display: flex !important; width: calc(clamp(236px, 25vw, 400px) * var(--mm-s, 1)) !important; height: calc(clamp(280px, calc(100vh - 70px), 720px) * var(--mm-s, 1)) !important;
+        order: 0; z-index: 150; display: flex !important; width: calc(clamp(280px, calc(100vh - 70px), 720px) * 0.5 * var(--mm-s, 1)) !important; height: calc(clamp(280px, calc(100vh - 70px), 720px) * var(--mm-s, 1)) !important;
         padding-bottom: 0 !important; border: 0 !important; border-radius: 12px; overflow: hidden; background: transparent;
         box-shadow: none; pointer-events: none; }
     #muskelmensch > * { pointer-events: auto; }
@@ -452,7 +491,7 @@
     #muskelmensch .mm-stage { background: transparent; }
     .mm-float-kopf { display: flex; position: absolute; top: 6px; right: 6px; z-index: 3; align-items: center; gap: 4px; }
     body:not([data-mmzustand="gross"]) #muskelmensch { touch-action: none; }
-    #muskelmensch.mm-hebt { box-shadow: 0 0 0 3px rgba(15,143,132,.55), 0 10px 24px rgba(0,0,0,.3) !important; border-radius: 12px; }
+    #muskelmensch.mm-hebt { box-shadow: none !important; outline: none !important; }
     .mm-float-kopf > span:first-child { display: none; font-size: 12px; color: #5E6966; padding: 0 6px; }
     .mm-float-kopf button { width: 32px; height: 30px; padding: 0; border: 1px solid #cfd9d3; border-radius: 8px;
                             background: rgba(255,255,255,.92); font-size: 15px; color: #4a554f; cursor: pointer; }
@@ -484,6 +523,11 @@
     #mm-credit details[open] { background: #fff; border: 1px solid #D5DAD8; border-radius: 8px; padding: 6px 8px; max-height: 60vh; overflow: auto; }
   }
   /* Nur Querformat: auf Touch-Geräten im Hochformat blockiert ein Hinweis die App */
+  @media screen {
+    body.mm-aus #muskelmensch { pointer-events: none; background: transparent !important; border: 0 !important; box-shadow: none !important; }
+    body.mm-aus #muskelmensch > :not(.ansicht-umschalter) { display: none !important; }
+    body.mm-aus #muskelmensch .ansicht-umschalter { pointer-events: auto; }
+  }
   #nur-quer { display: none; }
   @media (orientation: portrait) and (pointer: coarse) {
     #nur-quer { display: flex; position: fixed; inset: 0; z-index: 100000; flex-direction: column; align-items: center; justify-content: center;
@@ -546,13 +590,12 @@
 
   <h2 id="trainingsplan-titel" title="Trainingsplan im Menschen anzeigen">Trainingsplan</h2>
 
-  <details id="uebung-suche-wrap">
-    <summary>+ Eigene Übung</summary>
-    <h3>Einzelne Übungen suchen &amp; in Trainingsplan integrieren <button type="button" class="info-btn" id="info-uebung-suche" aria-expanded="false" aria-label="Erklärung anzeigen">i</button></h3>
-    <input id="uebung-suche" type="search" placeholder="Name, Muskelgruppe, Bewegungsmuster, Position oder Ausrüstung eingeben …" autocomplete="off">
+  <div id="uebung-suche-wrap">
+    <div class="such-summary" role="button" tabindex="0">+ Eigene Übung</div>
+    <input id="uebung-suche" type="search" placeholder="Übung suchen …" autocomplete="off">
     <div id="uebung-ergebnisse"></div>
     <div id="ueb-aktiv"></div>
-  </details>
+  </div>
 
   <h3 id="eigener-plan-titel" style="display:none;margin-top:18px;">Von dir hinzugefügt</h3>
   <div id="eigener-plan"></div>
@@ -561,7 +604,6 @@
 
 <div id="nur-quer" role="alert"><div class="drehen">📱</div><div>Bitte Gerät ins Querformat drehen</div></div>
 <aside id="muskelmensch">
-  <div class="mm-float-kopf"><span>Modell</span><span style="display:flex;gap:4px"><button type="button" id="mm-float-gross" aria-label="Modell vergrössern">⤢</button><button type="button" id="mm-float-klein" aria-label="Modell verkleinern">–</button></span></div>
   <div class="ansicht-umschalter" role="group" aria-label="Ansicht wählen">
     <button type="button" class="ansicht-btn" id="mm-ansicht-modell" aria-pressed="true">Modell</button>
     <button type="button" class="ansicht-btn" id="mm-ansicht-polar" aria-pressed="false">Polarplot</button>
@@ -90667,8 +90709,9 @@ function berechneHighlights(){
     // (wie in den anderen beiden Modi) keine Zahlen-Badges mehr -- badge:null.
     if (modusEl) modusEl.innerHTML = "Zeigt: <b>deine Ziele</b>";
     Object.entries(katState || {}).forEach(([hauptCode, state]) => {
-      Object.entries(state.subZiele || {}).forEach(([label, n]) => {
-        if (n <= 0) return;
+      const labels = new Set(Object.keys(state.subZiele || {}).filter(l => state.subZiele[l] > 0));
+      if ((state.ziel || 0) > 0) ((window.subkatVonKategorie || {})[hauptCode] || []).forEach(l => labels.add(l));
+      labels.forEach(label => {
         const s = SUBS_BY_LABEL[label]; if (!s) return;
         hi.set(s.key, { color: new THREE.Color(farbeVon(data, hauptCode)), light:false, badge:null });
       });
@@ -91157,7 +91200,7 @@ function renderTagChips(containerId, werte, opts) {
 // Popover mit statischem Erklärungstext öffnet/schliesst. Gleiches
 // Popover-Pattern (CSS-Klasse .popover) wie bei der Zielzahl-Steuerung.
 // ---------------------------------------------------------
-function macheInfoPopover(buttonId, inhaltHtml) {
+function macheInfoPopover(buttonId, inhaltHtml, extra) {
   const btn = document.getElementById(buttonId);
   if (!btn) return;
   let pop = null;
@@ -91178,6 +91221,7 @@ function macheInfoPopover(buttonId, inhaltHtml) {
     pop.innerHTML = `<button type="button" class="popover-close" aria-label="Schliessen">✕</button>${inhaltHtml}`;
     document.body.appendChild(pop);
     pop.querySelector(".popover-close").addEventListener("click", schliessen);
+    if (extra) extra(pop);
     const r = btn.getBoundingClientRect();
     pop.style.left = Math.max(8, Math.min(r.left, window.innerWidth - 276)) + "px";
     pop.style.top = (r.bottom + 6) + "px";
@@ -91242,10 +91286,18 @@ function init(data) {
 
   macheInfoPopover("info-trainingsstil", `<p>Steuert, ob bei mehreren gleichwertigen Auswahlmöglichkeiten eher
     gezielte Einzelgelenk-Übungen oder eher grosse Mehrgelenk-Übungen bevorzugt werden.</p>`);
-  macheInfoPopover("info-muskelgruppen", `<p>Zielzahl je Muskel festlegen — pro Hauptkategorie aufklappen, dann bei
-    der gewünschten Subkategorie mit +/− zählen. Alternativ direkt per Klick auf den Menschen rechts. Beides
-    ist gleichwertig und bleibt synchron. Zeilen, für die es unter der aktuellen Ausrüstungs-/Tags-Auswahl keine
-    Übung gibt, werden ausgeblendet.</p>`);
+  macheInfoPopover("info-muskelgruppen", `<p>Tippe bei einer Muskelgruppe auf +: Die App schlägt dann die passende
+    Anzahl Übungen vor, damit die ganze Gruppe abgedeckt ist. Mit − und + änderst du die Zahl, ↺ stellt die Empfehlung
+    wieder ein. Klappst du eine Gruppe auf, kannst du auch einzelne Muskeln gezielt wählen. Gruppe und Muskel lassen
+    sich frei kombinieren. Muskeln ohne passende Übung unter deinen Filtern sind gesperrt.</p>`, (pop) => {
+    const l = document.createElement("label");
+    l.className = "pop-schalter";
+    l.innerHTML = `<input type="checkbox"> Lateinische Namen`;
+    const cb = l.querySelector("input");
+    cb.checked = latToggle.checked;
+    cb.addEventListener("change", () => { latToggle.checked = cb.checked; latToggle.dispatchEvent(new Event("change")); });
+    pop.appendChild(l);
+  });
   macheInfoPopover("info-uebung-suche", `<p>Suche nach Name, Muskelgruppe (z.B. "Nacken"), Ausrüstung oder Tag
     (z.B. "Incline"). Zeigt am Menschen, was die angeklickte Übung trainiert (Target = kräftig, Synergisten = hell).</p>`);
 
@@ -91272,6 +91324,7 @@ function init(data) {
 const KAT_STATE = {};
 window.KAT_STATE = KAT_STATE; // auch für das MuskelFigur-Modul (Klick-Editing) sichtbar
 let subkatVonKategorie = {}; // hauptkategorie-code -> [subkategorie-namen], alphabetisch
+window.subkatVonKategorie = subkatVonKategorie;
 let ZIEL_DATA = null;
 let UEB_BY_CODE = {}; // code -> Übung, global verfügbar (Suche, Fixierung, Ersetzen)
 let AKKORDEON_OFFEN = new Set(); // Menge offener Hauptkategorie-Codes im Zielsetzungs-Akkordeon
@@ -91315,10 +91368,154 @@ function formatSubName(name) {
   return i > 0 ? name.slice(0, i).trim() : name;
 }
 
+
+// =====================================================================
+// Auswahl: Muskelgruppe ODER einzelner Muskel (Teilmuskel) -- gleichberechtigt,
+// frei kombinierbar. Jede Zeile hat ihren eigenen Zähler.
+//  * Gruppe (z.B. Brust): "so viele Übungen, die die Gruppe möglichst breit
+//    abdecken". Beim ersten Tippen auf + gilt die EMPFEHLUNG = kleinste Anzahl
+//    Übungen, die unter den aktuellen Filtern jeden Teilmuskel der Gruppe
+//    mindestens einmal PRIMÄR trainieren (exaktes Set-Cover). Mit − / + kann
+//    man davon abweichen; ↺ stellt die Empfehlung wieder ein.
+//  * Teilmuskel: "so viele Übungen, die genau diesen Muskel primär trainieren".
+//  * Eine Übung darf mehrere Wünsche gleichzeitig erfüllen.
+// KAT_STATE[k] = { ziel (= wirksame Gruppenzahl), gruppeModus: aus|auto|manuell,
+//                  gruppeManuell, subZiele: {sub: n} }
+// =====================================================================
+let PRIM_INDEX = null;
+function primIndex(data) {
+  if (PRIM_INDEX) return PRIM_INDEX;
+  PRIM_INDEX = {};
+  data.kategorien.forEach(k => { PRIM_INDEX[k.code] = new Map(); });
+  data.zuordnung.forEach(z => {
+    if (z.status !== "primär" || !z.subkategorie || !PRIM_INDEX[z.kategorie]) return;
+    const m = PRIM_INDEX[z.kategorie];
+    if (!m.has(z.code)) m.set(z.code, new Set());
+    m.get(z.code).add(z.subkategorie);
+  });
+  return PRIM_INDEX;
+}
+let GRUPPEN_INFO = {};      // k -> { subs, R, Y, maxG, subMax }
+let GRUPPEN_HINWEIS = {};   // k -> { X, Y, g } -- tatsächliche Abdeckung im zuletzt berechneten Plan
+function berechneGruppenInfo(data) {
+  const idx = primIndex(data), filt = aktuelleFilter(), res = {};
+  data.kategorien.forEach(k => {
+    const subs = subkatVonKategorie[k.code] || [];
+    const pos = {}; subs.forEach((s, i) => { pos[s] = i; });
+    const masken = [], subMax = {};
+    let fixiertN = 0;
+    idx[k.code].forEach((subSet, code) => {
+      const u = UEB_BY_CODE[code]; if (!u) return;
+      if (FIXIERTE_UEBUNGEN.has(code)) { fixiertN++; subSet.forEach(s => { subMax[s] = (subMax[s] || 0) + 1; }); return; }
+      if (AUSGESCHLOSSENE_UEBUNGEN.has(code) || !erfuelltFilter(u, filt)) return;
+      let m = 0;
+      subSet.forEach(s => { m |= (1 << pos[s]); subMax[s] = (subMax[s] || 0) + 1; });
+      masken.push(m);
+    });
+    const distinkt = Array.from(new Set(masken));
+    let U = 0; distinkt.forEach(m => { U |= m; });
+    let R = 0;
+    if (U) {
+      const N = 1 << subs.length, INF = 32767, dp = new Int16Array(N).fill(INF);
+      dp[0] = 0;
+      for (let mask = 0; mask < N; mask++) {
+        if (dp[mask] === INF) continue;
+        for (let i = 0; i < distinkt.length; i++) {
+          const nm = mask | distinkt[i];
+          if (dp[mask] + 1 < dp[nm]) dp[nm] = dp[mask] + 1;
+        }
+      }
+      R = dp[U];
+    }
+    res[k.code] = { subs, R, Y: subs.filter(s => (subMax[s] || 0) > 0).length, maxG: masken.length + fixiertN, subMax };
+  });
+  return res;
+}
+function effG(k) {
+  const s = KAT_STATE[k], inf = GRUPPEN_INFO[k];
+  if (!s || !inf) return 0;
+  let g = 0;
+  if (s.gruppeModus === "auto") g = inf.R;
+  else if (s.gruppeModus === "manuell") g = s.gruppeManuell || 0;
+  return Math.min(g, inf.maxG);
+}
+function aktualisiereZiele(data) {
+  GRUPPEN_INFO = berechneGruppenInfo(data || ZIEL_DATA);
+  Object.keys(KAT_STATE).forEach(k => { KAT_STATE[k].ziel = effG(k); });
+}
+function katAktiv(k) {
+  const s = KAT_STATE[k];
+  return !!s && ((s.ziel || 0) > 0 || Object.keys(s.subZiele).length > 0);
+}
+function katLabelVon(k) { const e = ZIEL_DATA && ZIEL_DATA.kategorien.find(x => x.code === k); return e ? e.label : k; }
+function uebungenText(n) { return n + (n === 1 ? " Übung" : " Übungen"); }
+// Klick auf + / − / ↺ bei einer Gruppe
+function setGruppe(k, aktion) {
+  const s = KAT_STATE[k], inf = GRUPPEN_INFO[k];
+  if (!s || !inf) return;
+  const cur = effG(k);
+  if (aktion === "auto") { s.gruppeModus = inf.R > 0 ? "auto" : "aus"; }
+  else {
+    let neu = aktion === "plus" ? cur + 1 : cur - 1;
+    if (aktion === "plus" && cur === 0 && inf.R > 0) neu = inf.R;
+    neu = Math.max(0, Math.min(neu, inf.maxG));
+    if (neu <= 0) { s.gruppeModus = "aus"; s.gruppeManuell = 0; }
+    else if (neu === inf.R) { s.gruppeModus = "auto"; }
+    else { s.gruppeModus = "manuell"; s.gruppeManuell = neu; }
+  }
+  nachZielAenderung();
+}
+function nachZielAenderung() {
+  renderAkkordeon();
+  if (window.MuskelFigur) window.MuskelFigur.zeigeZiele(KAT_STATE, ZIEL_DATA);
+  renderPolarplotAnsicht();
+  planLiveDebounced(ZIEL_DATA);
+}
+function gruppenHinweisHtml(k) {
+  const inf = GRUPPEN_INFO[k], s = KAT_STATE[k], label = katLabelVon(k);
+  if (!inf) return "";
+  if (inf.maxG === 0) return `<p><b>${label}</b></p><p>Unter deinen Filtern gibt es keine passende Übung.</p>`;
+  const g = effG(k), R = inf.R, H = GRUPPEN_HINWEIS[k];
+  const nicht = inf.subs.filter(x => (inf.subMax[x] || 0) === 0).map(formatSubName);
+  let t = `<p><b>${label}</b></p>`;
+  if (g === 0) {
+    t += `<p>Tippe auf +, um ${label} zu trainieren. Empfehlung: ${uebungenText(R)} decken ${label} ganz ab.</p>`;
+  } else if (s.gruppeModus === "auto") {
+    t += `<p>Empfehlung: ${uebungenText(R)} decken ${label} ganz ab.</p>`;
+  } else if (g < R) {
+    t += `<p>${H && H.g === g ? `Deckt ${H.X} von ${H.Y} Teilmuskeln ab. ` : ""}Für ${label} ganz sind mindestens ${uebungenText(R)} nötig.</p>`;
+  } else {
+    t += `<p>Mit ${uebungenText(R)} ist ${label} schon ganz abgedeckt. Weitere Übungen bringen mehr Umfang.</p>`;
+  }
+  if (s.gruppeModus === "manuell") t += `<p>↺ stellt die Empfehlung (${R}) wieder ein.</p>`;
+  if (nicht.length) t += `<p>Mit deinen Filtern nicht abdeckbar: ${nicht.join(", ")}.</p>`;
+  return t;
+}
+let KAT_INFO_POP = null;
+function zeigeKatInfo(btn, html) {
+  if (KAT_INFO_POP) { KAT_INFO_POP.remove(); KAT_INFO_POP = null; document.removeEventListener("click", KAT_INFO_AUSSEN); }
+  const pop = document.createElement("div");
+  pop.className = "popover";
+  pop.innerHTML = `<button type="button" class="popover-close" aria-label="Schliessen">✕</button>${html}`;
+  document.body.appendChild(pop);
+  KAT_INFO_POP = pop;
+  const zu = () => { if (KAT_INFO_POP) { KAT_INFO_POP.remove(); KAT_INFO_POP = null; } document.removeEventListener("click", KAT_INFO_AUSSEN); };
+  pop.querySelector(".popover-close").addEventListener("click", zu);
+  const r = btn.getBoundingClientRect();
+  pop.style.left = Math.max(8, Math.min(r.left, window.innerWidth - 276)) + "px";
+  pop.style.top = (r.bottom + 6) + "px";
+  setTimeout(() => document.addEventListener("click", KAT_INFO_AUSSEN), 0);
+}
+function KAT_INFO_AUSSEN(e) {
+  if (KAT_INFO_POP && !KAT_INFO_POP.contains(e.target) && !e.target.closest(".kat-info")) {
+    KAT_INFO_POP.remove(); KAT_INFO_POP = null; document.removeEventListener("click", KAT_INFO_AUSSEN);
+  }
+}
+
 function buildZielUI(data) {
   ZIEL_DATA = data;
   window.ZIEL_DATA = data;
-  data.kategorien.forEach(k => { KAT_STATE[k.code] = { ziel: 0, subZiele: {} }; });
+  data.kategorien.forEach(k => { KAT_STATE[k.code] = { ziel: 0, gruppeModus: "aus", gruppeManuell: 0, subZiele: {} }; });
 
   const subSet = {};
   data.zuordnung.forEach(z => {
@@ -91382,55 +91579,44 @@ function verfuegbarkeitProSub(data) {
 function renderAkkordeon() {
   const wrap = document.getElementById("ziel-akkordeon");
   if (!wrap || !ZIEL_DATA) return;
-  const verf = verfuegbarkeitProSub(ZIEL_DATA);
+  aktualisiereZiele(ZIEL_DATA);
   const kats = [...ZIEL_DATA.kategorien].sort((a, b) => a.order - b.order);
-  const subsProKat = {};
+  const btn = (cls, txt, aria, dis) => `<button type="button" class="${cls}" aria-label="${aria}"${dis ? " disabled" : ""}>${txt}</button>`;
 
   wrap.innerHTML = kats.map(k => {
-    const state = KAT_STATE[k.code];
-    const alle = subkatVonKategorie[k.code] || [];
-    const subs = alle.filter(name => (verf[name] || 0) > 0 || (state.subZiele[name] || 0) > 0);
-    subsProKat[k.code] = subs;
-    const anzahlMuskeln = Object.keys(state.subZiele).length;
-    const badgeHtml = anzahlMuskeln > 0
-      ? `<span class="kat-akk-badge">${state.ziel} Übung${state.ziel === 1 ? "" : "en"}</span>`
-      : "";
+    const state = KAT_STATE[k.code], inf = GRUPPEN_INFO[k.code];
+    const g = effG(k.code);
     const offen = AKKORDEON_OFFEN.has(k.code);
-    // Punkt 4: "alles an" nur aktiv (Knopf ausgefüllt/Häkchen), wenn es überhaupt
-    // Subkategorien gibt UND JEDE davon bereits eine Zielzahl > 0 hat.
-    const alleAn = alle.length > 0 && alle.every(name => (state.subZiele[name] || 0) > 0);
-    const koerper = subs.length ? subs.map(name => {
-      const wert = state.subZiele[name] || 0;
-      const verfN = verf[name] || 0;
-      const warnung = wert > verfN
-        ? (verfN === 0 ? "keine Übung findbar unter aktuellen Filtern" : `max. ${verfN} möglich unter aktuellen Filtern`)
-        : "";
+    const gesperrt = inf.maxG === 0;
+    const reset = state.gruppeModus === "manuell"
+      ? `<button type="button" class="kat-reset" aria-label="Zurück zur Empfehlung" title="Zurück zur Empfehlung (${inf.R})">↺</button>` : "";
+    const stepper = gesperrt
+      ? `<span class="kat-gesperrt" title="Keine Übung mit deinen Filtern">—</span>`
+      : `<span class="sub-stepper g-stepper">${btn("g-minus", "−", "Anzahl Übungen für " + k.label + " verringern", g <= 0)}<b>${g}</b>${btn("g-plus", "+", "Anzahl Übungen für " + k.label + " erhöhen", g >= inf.maxG)}</span>`;
+    const koerper = inf.subs.map((name, i) => {
+      const wert = state.subZiele[name] || 0, mx = inf.subMax[name] || 0;
+      const sperre = mx === 0;
+      const warnung = wert > mx && mx > 0 ? `max. ${mx} möglich unter aktuellen Filtern` : "";
       return `
-      <div class="sub-zeile">
-        <span class="sub-name">${formatSubName(name)}</span>
+      <div class="sub-zeile${sperre ? " gesperrt" : ""}" data-i="${i}">
+        <span class="sub-name">${formatSubName(name)}${sperre ? `<span class="sub-sperrhinweis">keine Übung mit deinen Filtern</span>` : ""}</span>
         <span class="sub-zeile-rechts">
-          <span class="sub-stepper">
-            <button type="button" class="sub-minus" aria-label="Zielzahl für ${formatSubName(name)} verringern">−</button>
-            <b>${wert}</b>
-            <button type="button" class="sub-plus" aria-label="Zielzahl für ${formatSubName(name)} erhöhen">+</button>
-          </span>
+          ${sperre ? `<span class="kat-gesperrt">—</span>` : `<span class="sub-stepper">${btn("sub-minus", "−", "Anzahl Übungen für " + formatSubName(name) + " verringern", wert <= 0)}<b>${wert}</b>${btn("sub-plus", "+", "Anzahl Übungen für " + formatSubName(name) + " erhöhen", wert >= mx)}</span>`}
           ${warnung ? `<span class="sub-warnung">${warnung}</span>` : ""}
         </span>
       </div>`;
-    }).join("") : `<p class="hint" style="margin:4px 0;">Keine Übungen unter aktuellen Filtern.</p>`;
-    const kopfzeile = subs.length ? `<div class="sub-kopf-zeile"><span></span><span class="sub-kopf-label">Anzahl Übungen</span></div>` : "";
+    }).join("");
 
     return `
-    <div class="kat-akk${offen ? " offen" : ""}" data-kat="${k.code}">
+    <div class="kat-akk${offen ? " offen" : ""}${gesperrt ? " gesperrt" : ""}" data-kat="${k.code}">
       <div class="kat-akk-kopf" style="border-left-color:${k.farbe}">
-        <button type="button" class="kat-akk-all${alleAn ? " aktiv" : ""}" data-kat-all="${k.code}"
-          aria-label="${alleAn ? "Alle Zielzahlen in " + k.label + " zurücksetzen" : "Alle Subkategorien in " + k.label + " aktivieren"}"
-          title="${alleAn ? "Alle auf 0 setzen" : "Alle auf 1 setzen"}"></button>
         <span class="kat-akk-name">${k.label}</span>
-        ${badgeHtml}
+        <button type="button" class="info-btn kat-info" aria-label="Erklärung zu ${k.label}">i</button>
+        ${reset}
+        ${stepper}
         <span class="kat-akk-chevron">▸</span>
       </div>
-      <div class="kat-akk-body">${kopfzeile}${koerper}</div>
+      <div class="kat-akk-body">${koerper}</div>
     </div>`;
   }).join("");
 
@@ -91440,62 +91626,35 @@ function renderAkkordeon() {
       if (AKKORDEON_OFFEN.has(hauptCode)) AKKORDEON_OFFEN.delete(hauptCode); else AKKORDEON_OFFEN.add(hauptCode);
       renderAkkordeon();
     });
-    // Punkt 4: eigener Knopf, getrennt vom Auf-/Zuklappen -- stopPropagation
-    // verhindert, dass derselbe Klick zusätzlich das Akkordeon toggelt.
-    const allBtn = el.querySelector(".kat-akk-all");
-    if (allBtn) allBtn.addEventListener("click", (e) => { e.stopPropagation(); toggleHauptAlle(hauptCode); });
-    const subs = subsProKat[hauptCode] || [];
-    el.querySelectorAll(".sub-zeile").forEach((zeile, i) => {
-      const name = subs[i];
+    const stop = (sel, fn) => { const b = el.querySelector(sel); if (b) b.addEventListener("click", (e) => { e.stopPropagation(); fn(); }); };
+    stop(".kat-info", () => zeigeKatInfo(el.querySelector(".kat-info"), gruppenHinweisHtml(hauptCode)));
+    stop(".kat-reset", () => setGruppe(hauptCode, "auto"));
+    stop(".g-minus", () => setGruppe(hauptCode, "minus"));
+    stop(".g-plus", () => setGruppe(hauptCode, "plus"));
+    const subs = GRUPPEN_INFO[hauptCode].subs;
+    el.querySelectorAll(".sub-zeile").forEach(zeile => {
+      const name = subs[parseInt(zeile.dataset.i, 10)];
       const wert = () => (KAT_STATE[hauptCode].subZiele[name]) || 0;
-      zeile.querySelector(".sub-minus").addEventListener("click", (e) => { e.stopPropagation(); setSubZiel(hauptCode, name, wert() - 1); });
-      zeile.querySelector(".sub-plus").addEventListener("click", (e) => { e.stopPropagation(); setSubZiel(hauptCode, name, wert() + 1); });
+      const m = zeile.querySelector(".sub-minus"), p = zeile.querySelector(".sub-plus");
+      if (m) m.addEventListener("click", (e) => { e.stopPropagation(); setSubZiel(hauptCode, name, wert() - 1); });
+      if (p) p.addEventListener("click", (e) => { e.stopPropagation(); setSubZiel(hauptCode, name, wert() + 1); });
     });
   });
 }
 
-// Einzige Mutationsfunktion für KAT_STATE. Sowohl das Akkordeon hier als auch
-// ein Klick auf den Muskelmenschen (siehe MuskelFigur-Modul weiter oben im
-// Dokument) rufen AUSSCHLIESSLICH diese Funktion auf -- dadurch bleiben beide
-// Eingabewege garantiert synchron.
+// Zähler eines einzelnen Muskels (Teilmuskel). Gruppe und Teilmuskel sind
+// unabhängig voneinander; Obergrenze = Anzahl Übungen, die den Muskel unter
+// den aktuellen Filtern primär trainieren.
 function setSubZiel(hauptCode, subLabel, wert, silent) {
   const state = KAT_STATE[hauptCode];
   if (!state) return;
-  // Punkt B: keine Obergrenze mehr (bisher hart bei 10) -- frei nach oben zählbar.
-  wert = Math.max(0, Math.round(wert) || 0);
+  const inf = GRUPPEN_INFO[hauptCode];
+  const mx = inf ? (inf.subMax[subLabel] || 0) : Infinity;
+  wert = Math.max(0, Math.min(Math.round(wert) || 0, mx));
   if (wert <= 0) delete state.subZiele[subLabel];
   else state.subZiele[subLabel] = wert;
-  state.ziel = Object.values(state.subZiele).reduce((a, b) => a + b, 0);
-
-  // silent=true: für Sammel-Aktionen wie toggleHauptAlle(), die setSubZiel in
-  // einer Schleife für mehrere Subkategorien aufrufen -- Re-Render/Sync sollen
-  // dann nur EINMAL am Ende laufen, nicht pro Einzel-Aufruf. setSubZiel bleibt
-  // dabei weiterhin die einzige Stelle, die KAT_STATE tatsächlich mutiert.
   if (silent) return;
-  renderAkkordeon();
-  if (window.MuskelFigur) window.MuskelFigur.zeigeZiele(KAT_STATE, ZIEL_DATA);
-  renderPolarplotAnsicht();
-  planLiveDebounced(ZIEL_DATA);
-}
-
-// Punkt 4 (letzter Durchgang): Klick auf den Rundknopf im Akkordeon-Header
-// setzt alle Subkategorien dieser Hauptkategorie auf 1 (nur die, die noch bei
-// 0 stehen -- bereits gesetzte bleiben unverändert), bzw. setzt bei erneutem
-// Klick (wenn zuvor bereits ALLE > 0 waren) wieder alle auf 0. Einfacher
-// Toggle-Zustand, keine komplexere Logik.
-function toggleHauptAlle(hauptCode) {
-  const state = KAT_STATE[hauptCode];
-  const alle = subkatVonKategorie[hauptCode] || [];
-  if (!state || alle.length === 0) return;
-  const alleAn = alle.every(name => (state.subZiele[name] || 0) > 0);
-  alle.forEach(name => {
-    if (alleAn) setSubZiel(hauptCode, name, 0, true);
-    else if ((state.subZiele[name] || 0) <= 0) setSubZiel(hauptCode, name, 1, true);
-  });
-  renderAkkordeon();
-  if (window.MuskelFigur) window.MuskelFigur.zeigeZiele(KAT_STATE, ZIEL_DATA);
-  renderPolarplotAnsicht();
-  planLiveDebounced(ZIEL_DATA);
+  nachZielAenderung();
 }
 
 // ---------------------------------------------------------
@@ -91567,8 +91726,9 @@ function berechnePolarplotStatus() {
     }
   }
   if (KAT_STATE) {
-    Object.values(KAT_STATE).forEach(state => {
+    Object.entries(KAT_STATE).forEach(([k, state]) => {
       Object.entries(state.subZiele || {}).forEach(([label, n]) => { if (n > 0) status[label] = "primär"; });
+      if ((state.ziel || 0) > 0) (subkatVonKategorie[k] || []).forEach(label => { status[label] = "primär"; });
     });
   }
   return { titel: Object.keys(status).length ? "deine Ziele" : "—", status };
@@ -91707,17 +91867,25 @@ function renderPolarplotAnsicht() {
   const toolbar = document.getElementById("mm-toolbar");
   const credit = document.getElementById("mm-credit");
   if (!btnModell || !btnPolar) return;
-  function setAnsicht(polar) {
-    btnModell.setAttribute("aria-pressed", String(!polar));
-    btnPolar.setAttribute("aria-pressed", String(polar));
+  function setAnsicht(polar, aus) {
+    document.body.classList.toggle("mm-aus", !!aus);
+    btnModell.setAttribute("aria-pressed", String(!polar && !aus));
+    btnPolar.setAttribute("aria-pressed", String(polar && !aus));
     if (stage3d) stage3d.hidden = polar;
     if (stagePolar) stagePolar.hidden = !polar;
     if (toolbar) toolbar.hidden = polar;
     if (credit) credit.hidden = polar;
     if (polar) renderPolarplotAnsicht();
   }
-  btnModell.addEventListener("click", () => setAnsicht(false));
-  btnPolar.addEventListener("click", () => setAnsicht(true));
+  // Modell und Polarplot: je ein Schalter. Aktiven erneut tippen = beide aus.
+  let modus = "modell";
+  function wechsle(neu) {
+    modus = (modus === neu) ? "aus" : neu;
+    setAnsicht(modus === "polar", modus === "aus");
+    if (window.__mmZustandNeu) window.__mmZustandNeu();
+  }
+  btnModell.addEventListener("click", () => wechsle("modell"));
+  btnPolar.addEventListener("click", () => wechsle("polar"));
 })();
 
 // Umschalter Algorithmus-/Eigener Trainingsplan: zeigt entweder die
@@ -91749,14 +91917,16 @@ function renderPolarplotAnsicht() {
 
 (function () {
   // Schalter in der Kopfzeile des Plans: Tags / primäre / sekundäre Muskeln ein- oder ausblenden.
-  [["tags-toggle", "tags-an", "tagsAn", false], ["prim-toggle", "prim-aus", "primAus", true], ["sek-toggle", "sek-aus", "sekAus", true]].forEach(([id, klasse, key]) => {
+  [["tags-toggle", "tags-an", "tagsAn", false], ["prim-toggle", "prim-aus", "primAus", true], ["sek-toggle", "sek-aus", "sekAus", true]].forEach(([id, klasse, key, standardAn]) => {
     const b = document.getElementById(id);
     if (!b) return;
-    try { if (localStorage.getItem(key) === "1") document.body.classList.add(klasse); } catch (e) {}
+    let an = false;
+    try { const s = localStorage.getItem(key + "V2"); an = s === null ? !!standardAn : s === "1"; } catch (e) {}
+    if (an) document.body.classList.add(klasse);
     b.addEventListener("click", (e) => {
       e.stopPropagation();
       const an = document.body.classList.toggle(klasse);
-      try { localStorage.setItem(key, an ? "1" : "0"); } catch (e2) {}
+      try { localStorage.setItem(key + "V2", an ? "1" : "0"); } catch (e2) {}
     });
   });
 })();
@@ -91921,7 +92091,7 @@ function passtZuLinkenFiltern(u, data) {
   const bew = new Set(Array.from(document.querySelectorAll("#filter-bewegung .tag-check:checked")).map(el => el.value));
   if (pos.size > 0 && pos.size < ALLE_POSITIONEN.length && !positionenVon(u).some(p => pos.has(p))) return false;
   if (bew.size > 0 && bew.size < ALLE_BEWEGUNGEN.length && !bewegungenVon(u).some(b => bew.has(b))) return false;
-  const aktiveKat = data.kategorien.map(k => k.code).filter(k => (KAT_STATE[k]?.ziel || 0) > 0);
+  const aktiveKat = data.kategorien.map(k => k.code).filter(k => katAktiv(k));
   if (aktiveKat.length && !data.zuordnung.some(z => z.code === u.code && aktiveKat.includes(z.kategorie))) return false;
   return true;
 }
@@ -92063,6 +92233,29 @@ function buildUebungSuche(data) {
     planNeuBerechnen();
   });
 
+  // Tastatur offen lassen beim Tippen auf Treffer; Fenstergrösse an sichtbaren Bereich (Tastatur) koppeln
+  [ergebnisse, sammel].forEach(el => el.addEventListener("mousedown", (e) => { if (e.target.closest("button")) e.preventDefault(); }));
+  (function () {
+    const wrapEl = document.getElementById("uebung-suche-wrap");
+    if (!wrapEl) return;
+    const sum = wrapEl.querySelector(".such-summary");
+    Object.defineProperty(wrapEl, "open", { get() { return this.hasAttribute("open"); }, set(v) { const alt = this.hasAttribute("open"); this.toggleAttribute("open", !!v); if (alt !== !!v) this.dispatchEvent(new Event("toggle")); } });
+    sum.addEventListener("click", () => { wrapEl.open = !wrapEl.open; });
+    sum.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); wrapEl.open = !wrapEl.open; } });
+    function vv() {
+      const v = window.visualViewport, r = document.documentElement.style;
+      if (!v) return;
+      r.setProperty("--vv-h", v.height + "px"); r.setProperty("--vv-top", v.offsetTop + "px");
+    }
+    if (window.visualViewport) { visualViewport.addEventListener("resize", vv); visualViewport.addEventListener("scroll", vv); }
+    vv();
+    wrapEl.addEventListener("toggle", () => {
+      sum.textContent = wrapEl.open ? "✕ Schliessen" : "+ Eigene Übung";
+      document.body.classList.toggle("suche-offen", wrapEl.open);
+      if (wrapEl.open) { vv(); setTimeout(() => input.focus(), 50); }
+    });
+  })();
+
   function auswaehlen(code) {
     const u = UEB_BY_CODE[code];
     aktiv.style.display = "block";
@@ -92116,7 +92309,8 @@ function buildUebungSuche(data) {
 let PLAN_LIVE_TIMER = null;
 function planLive(data) {
   if (!data) return;
-  const hatKategorie = data.kategorien.some(k => (KAT_STATE[k.code]?.ziel || 0) > 0);
+  aktualisiereZiele(data);
+  const hatKategorie = data.kategorien.some(k => katAktiv(k.code));
   const hatFixiert = FIXIERTE_UEBUNGEN.size > 0;
   if (!hatKategorie && !hatFixiert) {
     const feedback = document.getElementById("feedback");
@@ -92579,11 +92773,8 @@ function trainingsplanErstellen(data) {
     if (bewEinschraenkend && !bewegungenVon(u).some(b => aktiveBewegungen.has(b))) return false;
     return true;
   }
-  const aktiveKat = data.kategorien.map(k => k.code).filter(k => KAT_STATE[k].ziel > 0);
-  const ziel = {}, subZiele = {};
-  // Flache Kopien, damit unten der Abzug der fixierten Übungen (Punkt G)
-  // NICHT die eigentliche KAT_STATE-Zielvorgabe des Nutzers verändert.
-  aktiveKat.forEach(k => { ziel[k] = KAT_STATE[k].ziel; subZiele[k] = { ...KAT_STATE[k].subZiele }; });
+  aktualisiereZiele(data);
+  const aktiveKat = data.kategorien.map(k => k.code).filter(k => katAktiv(k));
   const spezifitaet = parseInt(document.getElementById("spezifitaet").value, 10) / 100; // 0 = gezielt/eingelenkig, 1 = ganzer Körper/mehrgelenkig
   const spezifitaetSigned = (spezifitaet - 0.5) * 2; // -1..1
 
@@ -92591,7 +92782,7 @@ function trainingsplanErstellen(data) {
 
   if (aktiveKat.length === 0 && fixierteCodes.length === 0) {
     feedback.className = "fehler";
-    feedback.textContent = "Bitte wähle mindestens eine Muskelgruppe aus (Akkordeon oder Klick auf den Menschen) oder füge über \"Übung suchen\" eine fixierte Übung hinzu.";
+    feedback.textContent = "Bitte wähle mindestens eine Muskelgruppe aus (Auswahl links oder einzelnen Muskel) oder füge über \"+ Eigene Übung\" eine Übung hinzu.";
     return;
   }
   if (aktiveAusr.size === 0 && aktiveKat.length > 0) {
@@ -92601,32 +92792,40 @@ function trainingsplanErstellen(data) {
     return;
   }
 
-  // ---------------------------------------------------------------------
-  // Punkt G: fixierte Übungen sind additiv IMMER im Ergebnis enthalten. Statt
-  // sie als harten Solver-Constraint umzusetzen, werden sie VOR der
-  // Poolbildung aus dem Optimierungsraum herausgenommen und ihr Beitrag zu
-  // den Kategorie-/Subkategorie-Zielzahlen wird vorab von den Vorgaben
-  // abgezogen -- der Solver muss danach nur noch die verbleibende Lücke
-  // unter den ÜBRIGEN (nicht fixierten) Übungen schliessen. Das ist robuster
-  // mit javascript-lp-solver als ein "immer 1"-Constraint pro Übung und kann
-  // nie an den fixierten Übungen selbst scheitern.
-  // ---------------------------------------------------------------------
-  const fixierteZuordnung = data.zuordnung.filter(z => fixierteCodes.includes(z.code));
+  // Wirksame Vorgaben: Gruppenzahl g je Gruppe, Zahl n je Teilmuskel (jeweils
+  // auf das unter den Filtern Mögliche begrenzt).
+  const gZiel = {}, subZiele = {};
   aktiveKat.forEach(k => {
-    const getroffen = new Set(fixierteZuordnung.filter(z => z.kategorie === k).map(z => z.code));
-    ziel[k] = Math.max(0, ziel[k] - getroffen.size);
-    Object.keys(subZiele[k] || {}).forEach(sub => {
-      const getroffenSub = new Set(fixierteZuordnung.filter(z => z.kategorie === k && z.subkategorie === sub).map(z => z.code));
-      subZiele[k][sub] = Math.max(0, (subZiele[k][sub] || 0) - getroffenSub.size);
+    gZiel[k] = KAT_STATE[k].ziel || 0;
+    subZiele[k] = {};
+    Object.entries(KAT_STATE[k].subZiele).forEach(([s, n]) => {
+      const v = Math.min(n, GRUPPEN_INFO[k].subMax[s] || 0);
+      if (v > 0) subZiele[k][s] = v;
     });
   });
 
-  // Übungspool: nur (nicht fixierte) Übungen, die zu einer aktiven Kategorie
-  // beitragen (primär oder sekundär) UND die Ausrüstungs-/Tags-Auswahl erfüllen.
-  const zuordnungAktiv = data.zuordnung.filter(z => aktiveKat.includes(z.kategorie) && !fixierteCodes.includes(z.code) && !AUSGESCHLOSSENE_UEBUNGEN.has(z.code));
-  const codesInPool = new Set(zuordnungAktiv.map(z => z.code));
+  // Eigene (fixierte) Übungen sind IMMER im Plan. Ihr primärer Beitrag wird
+  // von den Vorgaben abgezogen; der Solver füllt nur die Lücke.
+  const idx = primIndex(data);
+  const fixK = {}, fixSub = {};
+  aktiveKat.forEach(k => { fixK[k] = 0; });
+  fixierteCodes.forEach(c => aktiveKat.forEach(k => {
+    const ss = idx[k].get(c);
+    if (ss) { fixK[k]++; ss.forEach(s => { fixSub[s] = (fixSub[s] || 0) + 1; }); }
+  }));
+
+  // Pool: nicht fixierte, nicht ausgeschlossene Übungen, die in einer aktiven
+  // Gruppe PRIMÄR wirken und Ausrüstung/Tags erfüllen.
   const uebByCode = UEB_BY_CODE;
-  const poolCodes = [...codesInPool].filter(c => uebByCode[c] && aktiveAusr.has(uebByCode[c].ausruestung) && erfuelltTagsFilter(uebByCode[c]));
+  const poolCodes = [], primKat = {}, primSub = {};
+  aktiveKat.forEach(k => idx[k].forEach((ss, c) => {
+    const u = uebByCode[c];
+    if (!u || FIXIERTE_UEBUNGEN.has(c) || AUSGESCHLOSSENE_UEBUNGEN.has(c)) return;
+    if (!aktiveAusr.has(u.ausruestung) || !erfuelltTagsFilter(u)) return;
+    if (!primKat[c]) { primKat[c] = new Set(); primSub[c] = new Set(); poolCodes.push(c); }
+    primKat[c].add(k);
+    ss.forEach(s => primSub[c].add(s));
+  }));
 
   if (poolCodes.length === 0 && fixierteCodes.length === 0) {
     feedback.className = "fehler";
@@ -92635,105 +92834,115 @@ function trainingsplanErstellen(data) {
     return;
   }
 
-  // Zuordnung pro (nicht fixierter) Pool-Übung: welche (aktiven) Kategorien
-  // primär/sekundär betroffen, und welche Subkategorien überhaupt (unabhängig
-  // vom Status) getroffen werden.
-  const primaerVon = {}, sekundaerVon = {}, subkatVon = {};
-  poolCodes.forEach(c => { primaerVon[c] = []; sekundaerVon[c] = []; subkatVon[c] = new Set(); });
-  zuordnungAktiv.forEach(z => {
-    if (!poolCodes.includes(z.code)) return;
-    if (z.status === "primär") primaerVon[z.code].push(z.kategorie);
-    else if (z.status === "sekundär") sekundaerVon[z.code].push(z.kategorie);
-    if (z.subkategorie) subkatVon[z.code].add(z.subkategorie);
-  });
-
-  // Punkt C: für jede aktive Subkategorie-Zielzahl die Menge der Pool-Codes,
-  // die sie PRIMÄR treffen -- Grundlage für den weichen Priorisierungs-Bonus
-  // unten (siehe Kommentar in loeseModell).
-  const primaerTrifftSub = {};
-  aktiveKat.forEach(k => Object.keys(subZiele[k] || {}).forEach(sub => { primaerTrifftSub[sub] = new Set(); }));
-  zuordnungAktiv.forEach(z => {
-    if (z.status === "primär" && z.subkategorie && primaerTrifftSub.hasOwnProperty(z.subkategorie) && poolCodes.includes(z.code)) {
-      primaerTrifftSub[z.subkategorie].add(z.code);
+  // Gruppen mit g >= Empfehlung (Auto oder manuell darüber) müssen GANZ abgedeckt
+  // sein: jeder abdeckbare Teilmuskel mindestens 1x primär (harte Vorgabe).
+  const hartSubs = [];
+  aktiveKat.forEach(k => {
+    const inf = GRUPPEN_INFO[k];
+    if (gZiel[k] > 0 && inf.R > 0 && gZiel[k] >= inf.R) {
+      inf.subs.forEach(s => { if (!(fixSub[s] > 0) && poolCodes.some(c => primSub[c].has(s))) hartSubs.push(s); });
     }
   });
-
-  function loeseModell(mitSpezifitaet, gesamtVorgabe) {
-    const model = { optimize: "score", opType: mitSpezifitaet ? "max" : "min",
-                     constraints: {}, variables: {}, binaries: {} };
-
-    poolCodes.forEach(c => {
-      // Trainingsstil-Score: richtet sich nach "gelenkigkeit" (mehrgelenkig/eingelenkig),
-      // NICHT nach der Anzahl getroffener Kategorien -- der Slider steuert also, ob bei
-      // gleichwertigen Auswahlmöglichkeiten eher isolierte Einzelgelenk-Übungen (Richtung
-      // "gezielt") oder grosse Mehrgelenk-Übungen (Richtung "ganzer Körper") bevorzugt werden.
-      const kompaktRichtung = uebByCode[c].gelenkigkeit === "mehrgelenkig" ? 1 : -1;
-      let score = mitSpezifitaet ? (1 + spezifitaetSigned * kompaktRichtung * 3) : 1;
-      // Punkt C: weicher Bonus statt hartem Constraint -- eine Subkategorie kann
-      // im Pool durchaus NUR sekundäre Treffer haben; ein harter "mindestens N
-      // primäre Treffer"-Constraint würde das Modell dann unlösbar machen
-      // (siehe Aufgabenstellung: "NIEMALS unlösbar wegen dieser Präferenz").
-      // Stattdessen bekommt in Phase 2 (mitSpezifitaet -- bei FESTER
-      // Gesamtanzahl aus Phase 1, siehe unten) jede Übung, die eine aktive
-      // Subkategorie-Zielzahl PRIMÄR trifft, einen Score-Bonus von +20 je
-      // getroffener Subkategorie -- deutlich grösser als der Spezifitäts-
-      // Bonus (max. ±3). Bei gleicher Übungsanzahl gewinnt so die Lösung mit
-      // mehr Primär-Treffern, aber die Mindestanzahl aus Phase 1 (reines
-      // Set-Cover, ohne diesen Bonus) bleibt unverändert massgeblich -- der
-      // Bonus wirkt NIE auf "gesamt"/Phase 1, nur auf die Auswahl INNERHALB
-      // der minimalen Grösse.
-      if (mitSpezifitaet) {
-        Object.keys(primaerTrifftSub).forEach(sub => { if (primaerTrifftSub[sub].has(c)) score += 20; });
-      }
-      model.variables[c] = { score: score, gesamt: 1 };
-      model.binaries[c] = 1;
-      aktiveKat.forEach(k => {
-        // "trifft Kategorie k" -- primär ODER sekundär, für die Rad-Vorgabe
-        model.variables[c]["k_" + k] = (primaerVon[c].includes(k) || sekundaerVon[c].includes(k)) ? 1 : 0;
-        Object.keys(subZiele[k] || {}).forEach(sub => {
-          model.variables[c]["sub::" + sub] = subkatVon[c].has(sub) ? 1 : 0;
-        });
-      });
-    });
+  // Basis-Constraints: Gruppe k braucht >= g Übungen mit primärer Wirkung in k;
+  // Teilmuskel s braucht >= n Übungen mit primärer Wirkung auf s.
+  function basisConstraints(model) {
+    hartSubs.forEach(s => { model.constraints["h::" + s] = { min: 1 }; });
     aktiveKat.forEach(k => {
-      model.constraints["k_" + k] = { min: ziel[k] };
-      Object.entries(subZiele[k] || {}).forEach(([sub, n]) => {
-        if (n > 0) model.constraints["sub::" + sub] = { min: n };
+      const noetig = Math.max(0, gZiel[k] - fixK[k]);
+      if (noetig > 0) model.constraints["g::" + k] = { min: noetig };
+      Object.entries(subZiele[k]).forEach(([s, n]) => {
+        const nn = Math.max(0, n - (fixSub[s] || 0));
+        if (nn > 0) model.constraints["s::" + s] = { min: nn };
       });
     });
-    if (gesamtVorgabe !== null) model.constraints["gesamt"] = { max: gesamtVorgabe };
-
-    return solver.Solve(model);
   }
-
-  const spezifitaetAn = document.getElementById("spezifitaet-an").checked;
-
-  // PHASE 1: kleinstmögliche Anzahl (nicht fixierter) Übungen ermitteln, die
-  // alle verbleibenden Minima/Wünsche erfüllt -- "Anzahl Übungen" ist NUR
-  // eine Obergrenze, kein Ziel, das künstlich aufgefüllt wird. Ohne
-  // verbleibenden Pool (z.B. wenn die fixierten Übungen bereits alles
-  // abdecken) wird das Lösen übersprungen.
-  const minLoesung = poolCodes.length ? loeseModell(false, null) : { feasible: true };
-
-  if (!minLoesung.feasible) {
-    feedback.className = "fehler";
-    feedback.textContent = "Mit dieser Auswahl und Ausrüstung lässt sich das nicht umsetzen. " +
-      "Bitte weniger Übungen pro Muskelgruppe verlangen oder mehr Ausrüstung zulassen.";
-    zeigeNurEigene(data);
-    return;
+  function basisVariable(model, c, v) {
+    primKat[c].forEach(k => { if (model.constraints["g::" + k]) v["g::" + k] = 1; });
+    primSub[c].forEach(s => { if (model.constraints["s::" + s]) v["s::" + s] = 1; if (model.constraints["h::" + s]) v["h::" + s] = 1; });
   }
-
-  const minCount = poolCodes.filter(c => minLoesung[c] === 1).length;
-
-  // PHASE 2: bei GENAU dieser Minimalgrösse (nicht mehr!) diejenige Auswahl
-  // finden, die nach Spezifität UND Primär-Priorisierung (Punkt C) am besten
-  // passt -- entscheidet NUR, welche der gleich grossen minimalen Lösungen
-  // genommen wird, nicht ob mehr Übungen als nötig eingefügt werden.
-  let ergebnis = minLoesung;
-  if (spezifitaetAn && minCount > 0) {
-    const phase2 = loeseModell(true, minCount);
-    if (phase2.feasible) ergebnis = phase2;
+  // Abdeckungs-Variablen y_s (weiche Vorgabe): nur für Gruppen mit 0 < g < Empfehlung --
+  // dort wird die Abdeckung bei gegebener Anzahl so gross wie möglich.
+  const covSubs = [];
+  aktiveKat.forEach(k => {
+    if (!(gZiel[k] > 0 && gZiel[k] < GRUPPEN_INFO[k].R)) return;
+    GRUPPEN_INFO[k].subs.forEach(s => {
+      if (!(fixSub[s] > 0) && poolCodes.some(c => primSub[c].has(s))) covSubs.push(s);
+    });
+  });
+  function baueModell(art, nMax, minCov) {
+    const m = { optimize: art === "A" ? "gesamt" : "score", opType: art === "A" ? "min" : "max",
+                constraints: {}, variables: {}, binaries: {} };
+    basisConstraints(m);
+    if (nMax !== null) m.constraints["gesamt"] = { max: nMax };
+    if (art !== "A") {
+      covSubs.forEach(s => {
+        m.constraints["cov::" + s] = { min: 0 };
+        m.variables["y::" + s] = { score: art === "B" ? 1000 : 0, ["cov::" + s]: -1, covsum: 1 };
+        m.binaries["y::" + s] = 1;
+      });
+      if (art === "C" && covSubs.length) m.constraints["covsum"] = { min: minCov };
+    }
+    poolCodes.forEach(c => {
+      const v = { gesamt: 1 };
+      if (art === "B") v.score = -1;
+      if (art === "C") {
+        const kompaktRichtung = uebByCode[c].gelenkigkeit === "mehrgelenkig" ? 1 : -1;
+        v.score = 1 + spezifitaetSigned * kompaktRichtung * 3;
+      }
+      basisVariable(m, c, v);
+      if (art !== "A") covSubs.forEach(s => { if (primSub[c].has(s)) v["cov::" + s] = 1; });
+      m.variables[c] = v;
+      m.binaries[c] = 1;
+    });
+    return m;
   }
+  const waehle = (res) => new Set(poolCodes.filter(c => Math.round(res[c] || 0) === 1));
+  const summeY = (res) => covSubs.reduce((a, s) => a + Math.round(res["y::" + s] || 0), 0);
+
+  // PHASE A: kleinste Anzahl Übungen, die alle Vorgaben erfüllt.
+  const mA = baueModell("A", null, 0);
+  let gewaehltSet = new Set();
+  if (Object.keys(mA.constraints).length > 0) {
+    const resA = poolCodes.length ? solver.Solve(mA) : { feasible: false };
+    if (!resA.feasible) {
+      feedback.className = "fehler";
+      feedback.textContent = "Mit dieser Auswahl und Ausrüstung lässt sich das nicht umsetzen. " +
+        "Bitte weniger Übungen pro Muskelgruppe verlangen oder mehr Ausrüstung zulassen.";
+      zeigeNurEigene(data);
+      return;
+    }
+    gewaehltSet = waehle(resA);
+    const nA = gewaehltSet.size;
+    // PHASE B: bei höchstens dieser Anzahl die grösstmögliche Abdeckung der
+    // Teilmuskel der gewählten Gruppen.
+    let bestCov = 0;
+    if (covSubs.length) {
+      const resB = solver.Solve(baueModell("B", nA, 0));
+      if (resB.feasible) { gewaehltSet = waehle(resB); bestCov = summeY(resB); }
+      else bestCov = 0;
+    }
+    // PHASE C: bei gleicher Anzahl und gleicher Abdeckung nach Trainingsstil wählen.
+    if (document.getElementById("spezifitaet-an").checked && nA > 0) {
+      const resC = solver.Solve(baueModell("C", nA, bestCov));
+      if (resC.feasible) gewaehltSet = waehle(resC);
+    }
+  }
+  const ergebnis = {};
+  gewaehltSet.forEach(c => { ergebnis[c] = 1; });
+
+  // Tatsächliche Abdeckung je Gruppe (für den Hinweis im ⓘ-Tooltip).
+  const imPlan = new Set([...fixierteCodes, ...gewaehltSet]);
+  GRUPPEN_HINWEIS = {};
+  aktiveKat.forEach(k => {
+    if (gZiel[k] <= 0) return;
+    let X = 0, Y = 0;
+    GRUPPEN_INFO[k].subs.forEach(s => {
+      if ((GRUPPEN_INFO[k].subMax[s] || 0) === 0) return;
+      Y++;
+      if (Array.from(imPlan).some(c => idx[k].get(c) && idx[k].get(c).has(s))) X++;
+    });
+    GRUPPEN_HINWEIS[k] = { X, Y, g: gZiel[k] };
+  });
 
   const katReihenfolgeVoll = data.kategorien.map(k => k.code);
   const relevanzKatListe = aktiveKat.length > 0 ? aktiveKat : katReihenfolgeVoll;
@@ -92957,7 +93166,7 @@ function trainingsplanErstellen(data) {
     window.addEventListener("resize", klemmen);
   }
 
-  setMm(lies("mmZustand", "mittel"));
+  setMm("mittel");
   if (grossBtn) grossBtn.addEventListener("click", () => setMm(body.getAttribute("data-mmzustand") === "gross" ? "mittel" : "gross"));
   if (kleinBtn) kleinBtn.addEventListener("click", () => setMm(body.getAttribute("data-mmzustand") === "klein" ? "mittel" : "klein"));
 })();
