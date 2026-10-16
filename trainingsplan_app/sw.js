@@ -1,5 +1,5 @@
 // Offline-Cache: alles, was die App lädt (Seite, 3D-Modelle, Bibliotheken), wird beim ersten Mal gespeichert.
-const CACHE = "trainingsplan-v1";
+const CACHE='trainingsplan-1792153313';
 self.addEventListener("install", e => { self.skipWaiting(); });
 self.addEventListener("activate", e => {
   e.waitUntil(caches.keys().then(ks => Promise.all(ks.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
